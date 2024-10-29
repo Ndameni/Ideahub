@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University QA System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Header and Navigation -->
+  <header>
+    <h1>University QA Submission System</h1>
+    <nav>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#submit-idea">Submit Idea</a>
+      <a href="#browse-ideas">Browse Ideas</a>
+      <a href="#analytics">Analytics</a>
+      <a href="#admin">Admin</a>
+      <a href="#profile">Profile</a>
+    </nav>
+  </header>
+
+  <!-- Dashboard -->
+  <section id="dashboard">
+    <h2>Dashboard</h2>
+    <div class="ideas-section">
+      <h3>Most Popular Ideas</h3>
+      <div class="idea-list" id="popular-ideas"></div>
+    </div>
+    <div class="ideas-section">
+      <h3>Most Viewed Ideas</h3>
+      <div class="idea-list" id="viewed-ideas"></div>
+    </div>
+    <div class="ideas-section">
+      <h3>Latest Ideas</h3>
+      <div class="idea-list" id="latest-ideas"></div>
+    </div>
+  </section>
+
+  <!-- Submit Idea Form -->
+  <section id="submit-idea">
+    <h2>Submit an Idea</h2>
+    <form id="idea-form">
+      <label for="idea-title">Idea Title:</label>
+      <input type="text" id="idea-title" name="title" required>
+      
+      <label for="idea-description">Description:</label>
+      <textarea id="idea-description" name="description" required></textarea>
+      
+      <label for="idea-category">Category:</label>
+      <select id="idea-category" name="category">
+        <option value="teaching">Teaching</option>
+        <option value="research">Research</option>
+        <option value="support">Support</option>
+      </select>
+
+      <label for="idea-file">Upload Supporting Document:</label>
+      <input type="file" id="idea-file" name="file">
+
+      <label>
+        <input type="checkbox" id="anonymous" name="anonymous">
+        Post Anonymously
+      </label>
+
+      <label>
+        <input type="checkbox" id="agree-terms" required>
+        Agree to <a href="#terms">Terms and Conditions</a>
+      </label>
+
+      <button type="submit">Submit Idea</button>
+    </form>
+  </section>
+
+  <!-- Admin Panel (for QA Manager) -->
+  <section id="admin">
+    <h2>Admin Panel</h2>
+    <div class="admin-section">
+      <h3>Manage Categories</h3>
+      <form id="category-form">
+        <input type="text" placeholder="Add new category">
+        <button type="submit">Add Category</button>
+      </form>
+    </div>
+    <div class="admin-section">
+      <h3>Data Export</h3>
+      <button onclick="exportData()">Export Data as CSV</button>
+      <button onclick="exportDocs()">Download Documents as ZIP</button>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
