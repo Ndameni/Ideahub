@@ -1,8 +1,11 @@
 const express = require('express');
-const path = require('path'); // Import path module
-const { Pool } = require('pg');
+const path = require('path');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const { pool } = require('./db');
+const authRoutes = require('./auth'); // Include your auth routes here
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -11,55 +14,52 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware to serve static files
-// app.use(express.static(path.join(__dirname, '../css')));
+// Middleware for CORS
+app.use(cors()); // Enable cross-origin requests
 
-// Middleware to serve static files from the root directory
-app.use('/css', express.static(path.join(__dirname, '../css')));  // This ensures that the CSS folder is served correctly
-// Serve the css folder
-// You can also serve other static folders if needed (e.g., public, js, etc.)
+// Middleware for serving static files
+app.use('/css', express.static(path.join(__dirname, 'css')));
 
-// Define a route for the form page
+// Middleware for JWT authentication
+function authenticateUser(req, res, next) {
+    const token = req.header('Authorization')?.split(' ')[1];
+    if (!token) return res.status(403).json({ message: 'Access denied' });
+
+    try {
+        const decoded = jwt.verify(token, 'your_jwt_secret');
+        req.user = decoded;
+        next();
+    } catch (error) {
+        res.status(400).json({ message: 'Invalid token', error });
+    }
+}
+
+// Auth routes
+app.use('/auth', authRoutes); // All /auth routes handled in auth.js
+
+// Route for the root page
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'SubmitIdeas.html')); // Updated to use path.join
+    res.redirect('/auth/login'); // Redirect to login page by default
 });
 
-// Set up PostgreSQL connection
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'IdeaHub',
-    password: 'admin',
-    port: 5432,
+// Route for submitting ideas (secured with JWT)
+app.get('/submit-idea', authenticateUser, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'SubmitIdeas.html'));
 });
 
-// Testing database connection
-pool.connect()
-.then(client => {
-    console.log('Connected to the database successfully!');
-})
-
-.catch(err => {
-    console.error('Database connection server', err.stack)
-})
-
-// Route to submit an idea
-app.post('/submit-idea', upload.single('file'), async (req, res) => {
-    const { title, description, categoryId} = req.body;
+app.post('/submit-idea', authenticateUser, upload.single('file'), async (req, res) => {
+    const { title, description, categoryId } = req.body;
     const documentPath = req.file ? req.file.path : null;
-    const userId = null; //This is a placeholder until login system is implemented 
-    // const categoryId = parseInt(req.body.category) // Default to 1 if not provided
-
-    const isAnonymous = req.body.anonymous === 'on'; // This sets true if checked, false otherwise
-
+    const userId = req.user.userId; // Get user ID from the authenticated user
+    const isAnonymous = req.body.anonymous === 'on';
 
     try {
         const query = `
-            INSERT INTO "Idea" (title, description, user_id, category_id, is_anonymous,document_path)
+            INSERT INTO "Idea" (title, description, user_id, category_id, is_anonymous, document_path)
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING idea_id
         `;
-        const values = [title, description, userId,categoryId, isAnonymous, documentPath];
+        const values = [title, description, userId, categoryId, isAnonymous, documentPath];
         const result = await pool.query(query, values);
 
         res.send(`Idea submitted successfully with ID: ${result.rows[0].idea_id}`);
@@ -69,7 +69,7 @@ app.post('/submit-idea', upload.single('file'), async (req, res) => {
     }
 });
 
-// Start the server
+// Start the server directly in app.js
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
