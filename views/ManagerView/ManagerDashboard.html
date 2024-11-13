@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Idea Collection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Icons -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .vote-count { font-weight: bold; color: #007bff; }
+        .comment-section { margin-top: 10px; }
+        .comment { font-size: 0.9rem; color: #555; }
+        .pagination .page-item.active .page-link { background-color: #007bff; color: white; }
+    </style>
+</head>
+<body>
+    <header class="bg-primary text-white p-3">
+        <div class="container">
+            <h1 class="text-center">IdeaHub</h1>
+            <nav>
+                <ul class="nav justify-content-center">
+                    <li class="nav-item"><a class="nav-link text-white" href="ManagerDashboard.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="Manage.html">Manage</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="Reports.html">Reports</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="ManagerInbox.html">Inbox <span id="notification-count" class="badge badge-light">3</span></a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="ManagerProfile.html">Profile</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mt-4">
+        <!-- Filter Bar -->
+        <section class="filter-bar mb-3">
+            <label for="filter">Filter by:</label>
+            <select id="filter" class="custom-select">
+                <option value="popular">Most Popular</option>
+                <option value="voted">Most Voted</option>
+                <option value="latest">Most Recent</option>
+            </select>
+        </section>
+
+        <!-- Ideas Section -->
+        <div id="ideas-container" class="row">
+            <!-- Ideas will be loaded here -->
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center" id="pagination-container">
+                <!-- Pagination buttons will be dynamically inserted here -->
+            </ul>
+        </nav>
+    </main>
+
+    <footer class="bg-primary text-white text-center py-3">
+        <p>&copy; 2024 IdeaHub Collection System</p>
+    </footer>
+
+    <!-- JS libraries -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Sample Ideas Data (Limited to 30 items for 6 pages)
+        const ideas = [
+            { title: "Smart Campus Lighting", description: "Motion-sensor lights to save energy.", submitter: "Alice Kim", votes: 120, timePosted: "2024-11-12T08:30:00Z", comments: ["Great idea, this will save a lot of money!", "Hope it works better than the current lights!", "Can't wait to see this implemented!"] },
+            { title: "Digital Bulletin Board", description: "A digital display board for news and events.", submitter: "John Doe", votes: 85, timePosted: "2024-11-10T14:00:00Z", comments: ["Digital boards would make it so much easier to update events!", "How about integrating QR codes?", "This idea is going to revolutionize campus communication!"] },
+            { title: "Green Spaces", description: "Convert rooftops into green spaces for relaxation.", submitter: "Jane Smith", votes: 150, timePosted: "2024-11-11T10:20:00Z", comments: ["Can we get some garden lounges up there?", "Would love to see this in my campus!", "Perfect idea for reducing stress levels during finals!"] },
+            { title: "Recycling App", description: "App to track and reward recycling efforts.", submitter: "Michael Lee", votes: 90, timePosted: "2024-11-09T09:00:00Z", comments: ["A great way to encourage students to recycle!", "Can it track non-paper materials too?", "I’d love rewards for recycling my bottles!"] },
+            { title: "Library Study Pods", description: "Soundproof pods for focused study.", submitter: "Sarah Brown", votes: 60, timePosted: "2024-11-08T16:45:00Z", comments: ["Finally! No more distractions during exams!", "Could these be booked via an app?", "Best idea ever!"] },
+            { title: "Campus Rideshare", description: "Ridesharing app for students on campus.", submitter: "Emma White", votes: 45, timePosted: "2024-11-07T11:30:00Z", comments: ["Is this app going to be available for all students?", "We need this for the long campus routes!", "I hope this takes off, parking is a nightmare."] },
+            { title: "Fitness Challenge App", description: "Track fitness challenges with friends.", submitter: "David Green", votes: 110, timePosted: "2024-11-13T12:00:00Z", comments: ["A fun way to stay fit! I’m in.", "Let’s create teams and make this competitive!", "Are there prizes for the winners?"] },
+            { title: "Study Group Finder", description: "App to find and join study groups.", submitter: "Mia Wilson", votes: 135, timePosted: "2024-11-14T13:15:00Z", comments: ["This will definitely help during midterms!", "Can I use it to find a study group for my art class?", "Great idea, this will make group studies so much easier."] },
+            { title: "Event Ticketing System", description: "Digital system for event registration.", submitter: "Chris Adams", votes: 98, timePosted: "2024-11-13T15:30:00Z", comments: ["No more paper tickets? This is amazing!", "A seamless event experience is what we need.", "Can we integrate this into a student ID?"] },
+            { title: "Art Exhibition Platform", description: "Virtual platform for showcasing art.", submitter: "Liam Taylor", votes: 75, timePosted: "2024-11-06T17:45:00Z", comments: ["This will really highlight student talent.", "Could there be an auction feature?", "I would love to showcase my paintings here!"] },
+            { title: "Smart Trash Bins", description: "Trash bins with sensors to alert when full.", submitter: "Oliver Black", votes: 65, timePosted: "2024-11-05T14:25:00Z", comments: ["This will make campus cleaner!", "I can already imagine the smart bins at work.", "Perfect solution for waste management!"] },
+            { title: "Automated Parking System", description: "A system that automatically directs cars to available parking spots.", submitter: "Sophia Green", votes: 50, timePosted: "2024-11-04T13:40:00Z", comments: ["No more searching for parking!", "Would love this on campus.", "Is it easy to integrate with existing structures?"] },
+            { title: "Interactive Maps", description: "A mobile app for interactive campus maps.", submitter: "Ethan White", votes: 80, timePosted: "2024-11-03T10:00:00Z", comments: ["Finally, no more getting lost!", "Perfect for first-year students.", "I hope it includes building interiors too."] },
+            { title: "Student Buddy System", description: "Pairing new students with current ones for guidance.", submitter: "Ava Davis", votes: 95, timePosted: "2024-11-02T09:30:00Z", comments: ["Great way to ease freshmen into college life.", "Would love to have someone show me around the first week.", "I’d definitely sign up for this!"] },
+            { title: "Campus WiFi Improvements", description: "Expanding and improving campus WiFi connectivity.", submitter: "Isabella Miller", votes: 110, timePosted: "2024-11-01T08:15:00Z", comments: ["Better WiFi is a must!", "We need this everywhere on campus.", "More WiFi zones, please!"] },
+            { title: "Online Lecture Recording", description: "Recording all lectures for online access.", submitter: "Benjamin Clark", votes: 120, timePosted: "2024-10-30T17:20:00Z", comments: ["Great for students who miss classes.", "I can catch up on lectures after work!", "Please make it available immediately!"] },
+            { title: "Textbook Exchange Program", description: "A platform to exchange textbooks.", submitter: "Charlotte Harris", votes: 85, timePosted: "2024-10-29T16:10:00Z", comments: ["I love the idea of saving money on textbooks.", "This would help so many students.", "Can we also do online swaps?"] },
+            { title: "Student Meal Plan App", description: "App for meal plan tracking and ordering.", submitter: "James Wilson", votes: 40, timePosted: "2024-10-28T14:50:00Z", comments: ["Would love to order food directly from the app.", "A game-changer for campus dining.", "Can it show current menu items?"] },
+            { title: "Online Study Tools", description: "Collection of online resources for study.", submitter: "Amelia Moore", votes: 65, timePosted: "2024-10-27T13:00:00Z", comments: ["I’m always looking for good study resources.", "Please include interactive quizzes!", "This will be super helpful during finals!"] },
+            { title: "Sustainable Fashion Show", description: "A fashion show highlighting sustainable clothing.", submitter: "Lucas Thompson", votes: 120, timePosted: "2024-10-26T12:25:00Z", comments: ["Can’t wait for this event!", "Sustainability in fashion is so important.", "I hope we see some innovative designs!"] },
+            { title: "Student Discount Platform", description: "A platform for student discounts at local stores.", submitter: "Mason Scott", votes: 90, timePosted: "2024-10-25T11:30:00Z", comments: ["This will save students so much money.", "I’d love discounts on books!", "Great way to help students stretch their budgets."] },
+            { title: "Campus Bus Tracker", description: "App to track campus buses in real-time.", submitter: "Harper Lewis", votes: 110, timePosted: "2024-10-24T10:00:00Z", comments: ["This will save so much time!", "Please include alerts for late buses.", "Perfect for students running late."] },
+            { title: "Smart Lockers", description: "Automated lockers for package delivery.", submitter: "Zoe Carter", votes: 50, timePosted: "2024-10-23T08:45:00Z", comments: ["Can these lockers be used for other items?", "I’d love this for secure deliveries.", "Perfect idea for on-campus deliveries."] }
+        ];
+
+        const cardsPerPage = 5;
+        const maxPages = 6; // Limit to 6 pages
+        let currentPage = 1;
+
+        // Load ideas and render them
+        function loadIdeas(page, filter) {
+            const startIndex = (page - 1) * cardsPerPage;
+            const endIndex = startIndex + cardsPerPage;
+            const filteredIdeas = ideas.slice(0, maxPages * cardsPerPage); // Show only up to 6 pages of data
+
+            // Sorting based on filter
+            if (filter === "latest") {
+                filteredIdeas.sort((a, b) => new Date(b.timePosted) - new Date(a.timePosted));
+            } else if (filter === "popular") {
+                filteredIdeas.sort((a, b) => b.votes - a.votes);
+            } else if (filter === "voted") {
+                filteredIdeas.sort((a, b) => b.votes - a.votes);
+            }
+
+            const ideasToShow = filteredIdeas.slice(startIndex, endIndex);
+            renderIdeas(ideasToShow);
+            createPagination(filteredIdeas.length);
+        }
+
+        // Render ideas to the page
+        function renderIdeas(ideasToRender) {
+            const ideasContainer = document.getElementById("ideas-container");
+            ideasContainer.innerHTML = "";
+
+            ideasToRender.forEach((idea, index) => {
+                const ideaCard = document.createElement("div");
+                ideaCard.classList.add("col-12", "col-md-6", "col-lg-4");
+                ideaCard.innerHTML = `
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">${idea.title}</h5>
+                            <p class="card-text">${idea.description}</p>
+                            <p class="text-muted">Submitted by: ${idea.submitter}</p>
+                            <p class="text-muted">Posted on: ${new Date(idea.timePosted).toLocaleString()}</p>
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <button class="btn btn-success upvote-btn" data-index="${index}"><i class="fas fa-thumbs-up"></i> Upvote</button>
+                                    <button class="btn btn-danger downvote-btn" data-index="${index}"><i class="fas fa-thumbs-down"></i> Downvote</button>
+                                </div>
+                                <span class="vote-count">${idea.votes} votes</span>
+                            </div>
+                            <div class="comment-section">
+                                <input type="text" class="form-control comment-input" placeholder="Add a comment...">
+                                <ul class="list-unstyled mt-2">
+                                    ${idea.comments.map(comment => `<li class="comment">${comment}</li>`).join("")}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                ideasContainer.appendChild(ideaCard);
+            });
+
+            // Attach voting functionality
+            attachVoteListeners();
+            attachCommentListeners();
+        }
+
+        // Handle upvote and downvote actions
+        function attachVoteListeners() {
+            document.querySelectorAll(".upvote-btn").forEach(button => {
+                button.addEventListener("click", function() {
+                    const index = this.getAttribute("data-index");
+                    ideas[index].votes++;
+                    loadIdeas(currentPage, document.getElementById("filter").value);
+                });
+            });
+
+            document.querySelectorAll(".downvote-btn").forEach(button => {
+                button.addEventListener("click", function() {
+                    const index = this.getAttribute("data-index");
+                    ideas[index].votes--;
+                    loadIdeas(currentPage, document.getElementById("filter").value);
+                });
+            });
+        }
+
+        // Handle comment input
+        function attachCommentListeners() {
+            document.querySelectorAll(".comment-input").forEach((input, index) => {
+                input.addEventListener("keypress", function(event) {
+                    if (event.key === "Enter" && input.value.trim() !== "") {
+                        ideas[index].comments.push(input.value.trim());
+                        input.value = "";
+                        loadIdeas(currentPage, document.getElementById("filter").value); // Re-render the current page
+                    }
+                });
+            });
+        }
+
+        // Create pagination buttons
+        function createPagination(totalIdeas) {
+            const paginationContainer = document.getElementById("pagination-container");
+            const totalPages = Math.min(Math.ceil(totalIdeas / cardsPerPage), maxPages); // Limit total pages to maxPages
+
+            paginationContainer.innerHTML = "";
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageItem = document.createElement("li");
+                pageItem.classList.add("page-item");
+                if (i === currentPage) pageItem.classList.add("active");
+                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                paginationContainer.appendChild(pageItem);
+            }
+
+            attachPaginationListeners();
+        }
+
+        // Attach event listeners to pagination buttons
+        function attachPaginationListeners() {
+            document.querySelectorAll(".page-link").forEach(link => {
+                link.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    currentPage = parseInt(this.textContent);
+                    loadIdeas(currentPage, document.getElementById("filter").value);
+                });
+            });
+        }
+
+        // Initialize
+        loadIdeas(currentPage, 'latest');
+    </script>
+</body>
+</html>

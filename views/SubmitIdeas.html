@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University QA System</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> <!-- Bootstrap CSS -->
+  <!-- <link rel="stylesheet" href="/css/style.css"> Your custom CSS if needed -->
+  <style>
+    footer {
+      margin-top: 30px; /* Moves footer a bit lower */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header and Navigation -->
+  <header class="bg-primary text-white p-3">
+    <div class="container">
+      <h1 class="text-center">IdeaHub</h1>
+      <nav>
+        <ul class="nav justify-content-center">
+          <li class="nav-item"><a class="nav-link text-white" href="UserDashboard.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="SubmitIdeas.html">Submit Ideas</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="inbox.html">Inbox <span id="notification-count" class="badge badge-light">3</span></a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="profile.html">Profile</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Submit Idea Form -->
+  <main class="container mt-4">
+    <section id="submit-idea">
+      <h2 class="mb-4">Submit an Idea</h2>
+      <form id="idea-form" action="submit-idea" method="POST" enctype="multipart/form-data">
+        <!-- Idea Title -->
+        <div class="form-group">
+          <label for="idea-title">Idea Title:</label>
+          <input type="text" id="idea-title" name="title" class="form-control" required>
+        </div>
+
+        <!-- Idea Description -->
+        <div class="form-group">
+          <label for="idea-description">Description:</label>
+          <textarea id="idea-description" name="description" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <!-- Idea Category -->
+        <div class="form-group">
+          <label for="idea-category">Category:</label>
+          <select id="idea-category" name="category" class="form-control">
+            <option value="teaching">School of Business</option>
+            <option value="research">School of Technology and Engineering</option>
+            <option value="support">School of Education</option>
+            <option value="support">School of Health</option>
+            <option value="support">School of Social Sciences</option>
+          </select>
+        </div>
+
+        <!-- File Upload -->
+        <div class="form-group">
+          <label for="idea-file">Upload Supporting Document:</label>
+          <input type="file" id="idea-file" name="file" class="form-control-file">
+        </div>
+
+        <!-- Anonymity Option -->
+        <div class="form-check">
+          <label class="form-check-label" for="anonymous">
+            <input type="checkbox" id="anonymous" name="anonymous" class="form-check-input">
+            Post Anonymously
+          </label>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="form-check">
+          <label class="form-check-label" for="agree-terms">
+            <input type="checkbox" id="agree-terms" class="form-check-input" required>
+            Agree to <a href="#terms">Terms and Conditions</a>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary mt-3">Submit Idea</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-primary text-white text-center py-3">
+    <p>&copy; 2024 IdeaHub Collection System</p>
+  </footer>
+
+  <!-- Bootstrap and JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    // Function to submit an idea
+    async function submitIdea(ideaData) {
+        const token = localStorage.getItem('authToken');
+        const response = await fetch('/ideas/submit', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ideaData)
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            console.log('Idea submitted:', data);
+            // Display success message
+            displayMessage('Idea submitted successfully!', 'success');
+            // Clear form fields
+            document.getElementById('idea-form').reset();
+        } else {
+            console.log('Error submitting idea:', data.message);
+            // Display error message
+            displayMessage('Failed to submit idea. Please try again.', 'error');
+        }
+    }
+
+    // Display a temporary message to the user
+    function displayMessage(message, type) {
+        const messageElement = document.createElement('p');
+        messageElement.textContent = message;
+        messageElement.className = type === 'success' ? 'success-message' : 'error-message';
+
+        document.getElementById('submit-idea').appendChild(messageElement);
+        setTimeout(() => {
+            messageElement.remove();
+        }, 3000);
+    }
+
+    // Handle form submission for submitting a new idea
+    const ideaForm = document.getElementById('idea-form');
+    ideaForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const submitButton = event.target.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+
+        const title = document.getElementById('idea-title').value;
+        const description = document.getElementById('idea-description').value;
+
+        const ideaData = {
+            title,
+            description,
+        };
+
+        await submitIdea(ideaData);
+
+        submitButton.disabled = false;
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Idea Hub System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="bg-primary text-white p-3">
+        <div class="container">
+            <h1 class="text-center">IdeaHub</h1>
+            <nav>
+                <ul class="nav justify-content-center">
+                    <li class="nav-item"><a class="nav-link text-white" href="CoordinatorDashboard.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="CManage.html">Manage</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="CoordinatorReports.html">Reports</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="CoordinatorInbox.html">Inbox<span id="notification-count" class="badge badge-light">3</span></a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="CoordinatorProfile.html">Profile</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Reports Container -->
+    <main class="container mt-5">
+        
+
+        <!-- Statistics Section -->
+        <section id="statistics" class="mb-5">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">Statistics</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Number of Ideas by Department -->
+                    <h4 class="mb-3">Number of Ideas by Department</h4>
+                    <table class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Department</th>
+                                <th>Number of Ideas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ideasByDepartment">
+                            <!-- Sample Data Rows (Dynamic data will replace this in a real implementation) -->
+                            <tr>
+                                <td>Computer Science</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>Human Resources</td>
+                                <td>30</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Percentage of Ideas by Department -->
+                    <h4 class="mt-4 mb-3">Percentage of Ideas by Department</h4>
+                    <table class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Department</th>
+                                <th>Percentage of Ideas (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="percentageByDepartment">
+                            <!-- Sample Data Rows -->
+                            <tr>
+                                <td>Computer Science</td>
+                                <td>60%</td>
+                            </tr>
+                            <tr>
+                                <td>Human Resources</td>
+                                <td>40%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Number of Contributors by Department -->
+                    <h4 class="mt-4 mb-3">Number of Contributors within Each Department</h4>
+                    <table class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Department</th>
+                                <th>Number of Contributors</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contributorsByDepartment">
+                            <!-- Sample Data Rows -->
+                            <tr>
+                                <td>Computer Science</td>
+                                <td>20</td>
+                            </tr>
+                            <tr>
+                                <td>Human Resources</td>
+                                <td>15</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exception Reports Section -->
+        <section id="exception-reports" class="mb-5">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">Exception Reports</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Ideas Without a Comment -->
+                    <h4 class="mb-3">Ideas Without a Comment</h4>
+                    <table class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Idea ID</th>
+                                <th>Idea Title</th>
+                                <th>Department</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ideasWithoutComment">
+                            <!-- Sample Data Rows -->
+                            <tr>
+                                <td>101</td>
+                                <td>New Onboarding Process</td>
+                                <td>Human Resources</td>
+                            </tr>
+                            <tr>
+                                <td>102</td>
+                                <td>Automated Attendance System</td>
+                                <td>Computer Science</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Anonymous Ideas and Comments -->
+                    <h4 class="mt-4 mb-3">Anonymous Ideas and Comments</h4>
+                    <table class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Type</th>
+                                <th>Content</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="anonymousContent">
+                            <!-- Sample Data Rows -->
+                            <tr>
+                                <td>Idea</td>
+                                <td>Implement hybrid working model</td>
+                                <td>2024-10-01</td>
+                            </tr>
+                            <tr>
+                                <td>Comment</td>
+                                <td>Support for mental health programs</td>
+                                <td>2024-10-05</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white text-center py-3 mt-4">
+        <p>&copy; 2024 Idea Hub System</p>
+    </footer>
+
+    <!-- Bootstrap JS and Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Custom JavaScript for functionality -->
+    <script src="script.js"></script>
+</body>
+</html>

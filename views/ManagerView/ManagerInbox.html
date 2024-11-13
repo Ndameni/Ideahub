@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox Notifications</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/Inbox.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="bg-primary text-white p-3">
+        <div class="container">
+            <h1 class="text-center">IdeaHub</h1>
+            <nav>
+                <ul class="nav justify-content-center">
+                    <li class="nav-item"><a class="nav-link text-white" href="ManagerDashboard.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="Manage.html">Manage</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="Reports.html">Reports</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="ManagerInbox.html">Inbox<span id="notification-count" class="badge badge-light">3</span></a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="ManagerProfile.html">Profile</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Inbox Notifications Content -->
+    <main class="container mt-4">
+        <div class="inbox-container">
+            <header class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Notifications</h2>
+                <button onclick="clearAllNotifications()" class="btn btn-danger">Clear All</button>
+            </header>
+            
+            <div class="notifications" id="notifications-list">
+                <!-- Dynamic notifications will be inserted here -->
+            </div>
+            
+            <footer class="inbox-footer text-center mt-4">
+                <button onclick="markAllRead()" class="btn btn-primary">Mark All as Read</button>
+            </footer>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white text-center py-3 mt-4">
+        <p>&copy; 2024 Idea Hub System</p>
+    </footer>
+
+    <!-- Bootstrap and JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        // Mock notifications data (in a real app, this would be fetched from an API)
+        const notifications = [
+            {
+                id: 1,
+                subject: "New Idea Submitted",
+                sender: "Team Member",
+                message: "A new idea has been submitted for review. Check it out!",
+                timestamp: "2 hours ago",
+                read: false
+            },
+            {
+                id: 2,
+                subject: "Idea Commented",
+                sender: "Professor John",
+                message: "Your idea has received a new comment. Check the details!",
+                timestamp: "5 hours ago",
+                read: false
+            },
+            {
+                id: 3,
+                subject: "New Vote on Your Idea",
+                sender: "Admin",
+                message: "Your idea has received a vote from another user.",
+                timestamp: "1 day ago",
+                read: false
+            }
+        ];
+
+        // Function to display notifications
+        function displayNotifications() {
+            const notificationsList = document.getElementById('notifications-list');
+            notificationsList.innerHTML = ''; // Clear any existing notifications
+
+            if (notifications.length === 0) {
+                notificationsList.innerHTML = '<p class="no-notifications text-center">No new notifications</p>';
+            } else {
+                notifications.forEach(notification => {
+                    const notificationElement = document.createElement('div');
+                    notificationElement.classList.add('inbox-item', 'card', 'mb-3');
+                    if (notification.read) {
+                        notificationElement.classList.add('read');
+                    }
+
+                    notificationElement.innerHTML = `
+                        <div class="card-body">
+                            <h5 class="card-title">${notification.subject}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">From: ${notification.sender}</h6>
+                            <p class="card-text">${notification.message}</p>
+                            <small class="text-muted">${notification.timestamp}</small>
+                            <button onclick="markAsRead(${notification.id})" class="btn btn-sm btn-success mt-2">Mark as Read</button>
+                        </div>
+                    `;
+
+                    notificationsList.appendChild(notificationElement);
+                });
+            }
+        }
+
+        // Mark a specific notification as read
+        function markAsRead(id) {
+            const notification = notifications.find(notification => notification.id === id);
+            if (notification && !notification.read) {
+                notification.read = true;
+                displayNotifications();
+            }
+        }
+
+        // Mark all notifications as read
+        function markAllRead() {
+            notifications.forEach(notification => {
+                notification.read = true;
+            });
+            displayNotifications();
+        }
+
+        // Clear all notifications
+        function clearAllNotifications() {
+            notifications.length = 0;
+            displayNotifications();
+        }
+
+        // Initialize the page with notifications
+        displayNotifications();
+    </script>
+</body>
+</html>

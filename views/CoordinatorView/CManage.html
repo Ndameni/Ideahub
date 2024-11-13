@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Manage Users</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="bg-primary text-white p-3">
+        <div class="container">
+            <h1 class="text-center">IdeaHub</h1>
+            <nav>
+                <ul class="nav justify-content-center">
+                    <li class="nav-item"><a class="nav-link text-white" href="CoordinatorDashboard.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="CManage.html">Manage</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="CoordinatorReports.html">Reports</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="CoordinatorReports.html">Inbox <span id="notification-count" class="badge badge-light">3</span></a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="CoordinatorProfile.html">Profile</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Admin Dashboard Container -->
+    <main class="container mt-5">
+        <h1 class="text-center mb-5">Manage Users in Computer Science Department</h1>
+
+        <!-- Users Table Section -->
+        <section id="user-management" class="mb-5">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">User List - Computer Science</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                                <!-- Sample Rows (Only Computer Science users) -->
+                                <tr id="user1">
+                                    <td>1</td>
+                                    <td>John Doe</td>
+                                    <td>john.doe@example.com</td>
+                                    <td>Staff</td>
+                                    <td><span id="status1" class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-warning btn-sm" onclick="toggleStatus(1)">Block</button>
+                                        <button class="btn btn-info btn-sm" onclick="toggleVisibility(1)">Hide</button>
+                                    </td>
+                                </tr>
+                                <tr id="user3">
+                                    <td>3</td>
+                                    <td>Mike Johnson</td>
+                                    <td>mike.johnson@example.com</td>
+                                    <td>Staff</td>
+                                    <td><span id="status3" class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-warning btn-sm" onclick="toggleStatus(3)">Block</button>
+                                        <button class="btn btn-info btn-sm" onclick="toggleVisibility(3)">Hide</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Management Section -->
+        <section id="category-management" class="mb-5">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">Category Management</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-inline mb-3">
+                        <input type="text" id="categoryName" class="form-control mr-2" placeholder="Enter category name">
+                        <button class="btn btn-success mr-2" onclick="addCategory()">Add Category</button>
+                        <button class="btn btn-warning mr-2" onclick="editCategory()">Edit Category</button>
+                        <button class="btn btn-danger mr-2" onclick="deleteCategory()">Delete Category</button>
+                        <button id="updateCategoryBtn" class="btn btn-info" onclick="updateCategory()" style="display: none;">Update Category</button>
+                    </div>
+                    <ul id="categoryList" class="list-group">
+                        <!-- Sample categories (dynamic data will be added) -->
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Submission Dates Section -->
+        <section id="submission-dates" class="mb-5">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">Set Submission Dates</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="submissionDate">Submission Deadline:</label>
+                        <input type="date" id="submissionDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="commentClosureDate">Comment Closure Date:</label>
+                        <input type="date" id="commentClosureDate" class="form-control">
+                    </div>
+                    <button class="btn btn-primary mt-3" onclick="setDates()">Save Dates</button>
+                    <p id="dateInfo" class="mt-2 text-muted"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Export Section -->
+        <section id="export-data" class="mb-5">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">Export Data</h2>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-outline-primary mr-2" onclick="exportData('ideas')">Export Ideas</button>
+                    <button class="btn btn-outline-primary mr-2" onclick="exportData('comments')">Export Comments</button>
+                    <button class="btn btn-outline-primary" onclick="exportData('files')">Export Files</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white text-center py-3 mt-4">
+        <p>&copy; 2024 Idea Hub System</p>
+    </footer>
+
+    <!-- Bootstrap JS and Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Custom JavaScript for functionality -->
+    <script>
+        // Toggle block/unblock status
+        function toggleStatus(userId) {
+            let statusElement = document.getElementById("status" + userId);
+            let actionButton = document.querySelectorAll(`#user${userId} button`)[0]; // First button is for block/unblock
+
+            if (statusElement.classList.contains("badge-success")) {
+                statusElement.textContent = "Blocked";
+                statusElement.classList.remove("badge-success");
+                statusElement.classList.add("badge-danger");
+                actionButton.textContent = "Unblock";
+            } else {
+                statusElement.textContent = "Active";
+                statusElement.classList.remove("badge-danger");
+                statusElement.classList.add("badge-success");
+                actionButton.textContent = "Block";
+            }
+        }
+
+        // Toggle hide/unhide user row
+        function toggleVisibility(userId) {
+            let userRow = document.getElementById("user" + userId);
+            let actionButton = document.querySelectorAll(`#user${userId} button`)[1]; // Second button is for hide/unhide
+
+            if (userRow.style.display === "none") {
+                userRow.style.display = "table-row";
+                actionButton.textContent = "Hide";
+            } else {
+                userRow.style.display = "none";
+                actionButton.textContent = "Unhide";
+            }
+        }
+    </script>
+</body>
+</html>

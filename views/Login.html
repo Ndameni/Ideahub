@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - IdeaHub</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Custom styling */
+    body {
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+    }
+      
+
+    .h-custom {
+      height: calc(100vh - 70px);
+    }
+    h1 {
+      font-size: 3rem; /* Larger heading */
+      font-weight: bold;
+    }
+    .form-control::placeholder {
+      font-size: 0.875rem; /* Smaller placeholder text */
+    }
+  </style>
+</head>
+<body>
+
+<section class="vh-100">
+  <div class="container-fluid h-custom">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-9 col-lg-6 col-xl-5">
+        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+          class="img-fluid" alt="Sample image">
+      </div>
+      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+        <header class="text-center mb-4">
+          <h1>IdeaHub</h1> <!-- Updated heading -->
+          <p>Please log in to continue</p>
+        </header>
+
+        <form id="login-form">
+          <!-- Email input -->
+          <div class="form-outline mb-4">
+            <label class="form-label" for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control form-control-lg"
+              placeholder="Enter a valid email address" required />
+            <small class="error-message text-danger" id="email-error"></small>
+          </div>
+
+          <!-- Password input -->
+          <div class="form-outline mb-3">
+            <label class="form-label" for="password">Password</label>
+            <input type="password" id="password" name="password" class="form-control form-control-lg"
+              placeholder="Enter password" required minlength="6" />
+            <small class="error-message text-danger" id="password-error"></small>
+          </div>
+
+          <div class="text-center text-lg-start mt-4 pt-2">
+            <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">
+              Login
+            </button>
+            <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="signup" class="link-danger">Register</a></p>
+            <small class="error-message text-danger" id="login-error"></small>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
+    <!-- Copyright -->
+    <div class="tsext-white mb-3 mb-md-0">
+      Copyright © 2024. All rights reserved.
+    </div>
+  </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script>
+  const loginForm = document.getElementById('login-form');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const emailError = document.getElementById('email-error');
+  const passwordError = document.getElementById('password-error');
+  const loginError = document.getElementById('login-error');
+
+  loginForm.addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    emailError.textContent = '';
+    passwordError.textContent = '';
+    loginError.textContent = '';
+
+    let valid = true;
+
+    if (!emailInput.value.includes('@')) {
+      emailError.textContent = 'Please enter a valid email address.';
+      valid = false;
+    }
+
+    if (passwordInput.value.length < 6) {
+      passwordError.textContent = 'Password must be at least 6 characters long.';
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    const userData = {
+      email: emailInput.value,
+      password: passwordInput.value
+    };
+
+    try {
+      const response = await fetch('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store the token in cookie and localStorage (same as before)
+        document.cookie = `authToken=${data.token}; path=/; max-age=3600`;
+
+        // Check the role and redirect based on it
+        const role = data.role;  // Assuming the server returns the user's role in the response
+
+       
+
+        if (role === 3) {  // Admin
+          window.location.href = '/admin-dashboard.html';
+        } else if (role === 4) {  // QA Manager
+          window.location.href = '/ManagerView/ManagerDashboard.html';
+        } else if (role === 5) {  // QA Coordinator
+          window.location.href = '/CoordinatorView/CoordinatorDashboard.html';
+        } else {
+          window.location.href = '/userdashboard.html';  // Default user dashboard
+        }
+      } else {
+        loginError.textContent = data.message || 'Login failed. Please check your credentials.';
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      loginError.textContent = 'An error occurred. Please try again later.';
+    }
+  });
+</script>
+
+
+</body>
+</html>

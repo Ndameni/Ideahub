@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/User.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="bg-primary text-white p-3">
+        <div class="container">
+            <h1 class="text-center">Idea Hub System</h1>
+            <nav>
+                <ul class="nav justify-content-center">
+                    <li class="nav-item"><a class="nav-link text-white" href="userdashboard.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="submitideas.html">Submit Idea</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="Inbox.html">Inbox <span id="notification-count" class="badge badge-light">3</span></a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="profile.html">Profile</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Profile Container -->
+    <main class="container mt-5">
+        <div class="profile-container">
+
+            <!-- Profile Header Section -->
+            <div class="card mb-4">
+                <div class="card-body d-flex align-items-center">
+                    <!-- Avatar Section -->
+                    <div class="profile-avatar-container mr-4">
+                        <img src="avatar.svg" alt="User Avatar" class="profile-avatar rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                    </div>
+                    <!-- Profile Info Section (Name, Department, Role) -->
+                    <div class="profile-info d-flex flex-column justify-content-between">
+                        <h2 class="card-title" id="profile-name">Member of Staff</h2>
+                        <p class="department">Department: Computer Science</p>
+                        <p class="role">Role: Academic Staff</p>
+                    </div>
+                    <!-- Action Buttons Section -->
+                    <div class="profile-buttons ml-auto">
+                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editProfileModal">Edit Profile</button>
+                        <!-- Logout Button, triggers the logout confirmation modal -->
+                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#logoutModal">Logout</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Section -->
+            <section class="profile-activity">
+                <h3>Recent Activity</h3>
+                <div class="activity-feed">
+                    <div class="activity-item card mb-2 p-3">
+                        <p><strong>Idea Submitted:</strong> Improving Library Booking System</p>
+                        <span class="activity-date text-muted">Submitted on: 2024-10-20</span>
+                    </div>
+                    <div class="activity-item card mb-2 p-3">
+                        <p><strong>Comment:</strong> "Great idea! This would really help students."</p>
+                        <span class="activity-date text-muted">Commented on: 2024-10-22</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProfileForm">
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Enter new password">
+                        </div>
+                        <div class="form-group">
+                            <label for="profilePicture">Profile Picture:</label>
+                            <input type="file" id="profilePicture" name="profilePicture" class="form-control-file" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-success btn-block">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to log out?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <a href="Welcome.html" class="btn btn-danger">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white text-center py-3 mt-4">
+        <p>&copy; 2024 Idea Hub System</p>
+    </footer>
+
+    <!-- Bootstrap JS and Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="js/script.js"></script>
+    <script>
+        // Handle Edit Profile Form Submission
+        document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent form submission
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const profilePicture = document.getElementById('profilePicture').files[0];
+
+            // Simple Validation
+            if (!name || !email) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Simulate updating profile (in reality, this would send data to a server)
+            alert('Profile updated successfully!');
+
+            // Optionally update UI
+            document.getElementById('profile-name').textContent = name;
+
+            // Close modal
+            $('#editProfileModal').modal('hide');
+        });
+        
+        // Example of dynamically updating the notification count (simulated)
+        document.getElementById('notification-count').textContent = 5; // Change this dynamically as needed
+    </script>
+</body>
+</html>
